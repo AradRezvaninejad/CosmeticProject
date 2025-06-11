@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cosmetic Boutique - Cart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                light: '#FED7E2',
+                dark: '#702459'
+              },
+              secondary: {
+                light: '#E9D8FD',
+                dark: '#553C9A'
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      .smooth-transition {
+        transition: all 0.3s ease-in-out;
+      }
+      
+      /* Custom scrollbar for cart items */
+      .cart-items-container {
+        scrollbar-width: thin;
+        scrollbar-color: #fed7e2 transparent;
+      }
+      
+      .cart-items-container::-webkit-scrollbar {
+        width: 6px;
+      }
+      
+      .cart-items-container::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      
+      .cart-items-container::-webkit-scrollbar-thumb {
+        background-color: #fed7e2;
+        border-radius: 20px;
+      }
+      
+      .dark .cart-items-container::-webkit-scrollbar-thumb {
+        background-color: #702459;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 smooth-transition min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+      <!-- Header with theme toggle -->
+      <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold bg-gradient-to-r from-primary-light to-secondary-light dark:from-primary-dark dark:to-secondary-dark bg-clip-text text-transparent">Cosmetic Boutique</h1>
+        <button id="themeToggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 smooth-transition">
+          <i class="fas fa-moon dark:hidden"></i>
+          <i class="fas fa-sun hidden dark:inline"></i>
+        </button>
+      </div>
+
+      <!-- Main content -->
+      <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Cart items -->
+        <div class="lg:w-2/3">
+          <h2 class="text-2xl font-semibold mb-6 border-b pb-2 border-gray-200 dark:border-gray-700">Your Shopping Cart ({{ total_items }} items)</h2>
+
+          <div class="cart-items-container max-h-[500px] overflow-y-auto pr-2">
+            {% for item in cart_products %}
+              {% with product=item.product quantity=item.quantity %}
+                <div class="flex flex-col sm:flex-row p-4 mb-4 rounded-lg bg-white dark:bg-gray-800 shadow-md smooth-transition">
+                  <div class="w-full sm:w-24 h-24 rounded-lg overflow-hidden sm:mr-4 mb-4 sm:mb-0">
+                    <img src="{{ product.picture.url }}" alt="{{ product.name }}" class="w-full h-full object-cover" />
+                  </div>
+                  <div class="flex-1">
+                    <div class="flex justify-between">
+                      <h3 class="font-medium text-lg">{{ product.name }}</h3>
+                      <form method="POST" action="{% url 'remove_from_cart' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" value="{{ product.id }}" />
+                        <button class="text-gray-500 hover:text-red-500"><i class="fas fa-times"></i></button>
+                      </form>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">{{ product.description|truncatechars:60 }}</p>
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center border rounded-full overflow-hidden">
+                        <form method="POST" action="{% url 'update_cart' %}">
+                          {% csrf_token %}
+                          <input type="hidden" name="product_id" value="{{ product.id }}" />
+<a href="{% url 'update_cart' %}?product_id={{ product.id }}&action=decrease" class="...">-</a>
+                          <span class="px-4">{{ quantity }}</span>
+<a href="{% url 'update_cart' %}?product_id={{ product.id }}&action=increase" class="...">+</a>
+                        </form>
+                      </div>
+                      <span class="font-semibold">${{ product.price }}</span>
+                    </div>
+                  </div>
+                </div>
+              {% endwith %}
+            {% empty %}
+              <p class="text-gray-600 dark:text-gray-400">Your cart is empty.</p>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Order summary -->
+        <div class="lg:w-1/3">
+          <div class="sticky top-8">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden smooth-transition">
+              <!-- Summary header -->
+              <div class="bg-gradient-to-r from-primary-light to-secondary-light dark:from-primary-dark dark:to-secondary-dark p-4 text-white">
+                <h2 class="text-xl font-bold">Order Summary</h2>
+              </div>
+
+              <!-- Summary details -->
+              <div class="p-6">
+                <div class="space-y-4">
+                  <div class="border-t border-gray-200 dark:border-gray-700 my-2"></div>
+                  <div class="flex justify-between font-bold text-lg">
+                    <span>Total</span>
+                    <span>${{ cart_total }}</span>
+                  </div>
+                </div>
+
+                <!-- Payment button -->
+                <a href="verify" class="w-full mt-6 px-6 py-3 rounded-full bg-gradient-to-r from-primary-light to-secondary-light dark:from-primary-dark dark:to-secondary-dark text-white font-semibold hover:opacity-90 shadow-lg smooth-transition transform hover:scale-105 inline-block text-center"><i class="fas fa-lock mr-2"></i> Secure Checkout</a>
+
+                <div class="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
+                  <p>or</p>
+                  <a href="{% url 'index' %}" class="mt-2 text-primary-light dark:text-primary-dark font-medium hover:underline">Continue Shopping</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Security badge -->
+            <div class="mt-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md flex items-center justify-center">
+              <div class="mr-3 text-green-500 text-2xl">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <div>
+                <p class="font-medium">Secure Checkout</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">All transactions are encrypted</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Theme toggle functionality
+      const themeToggle = document.getElementById('themeToggle')
+      const html = document.documentElement
+      
+      // Check for saved user preference or use OS preference
+      const userTheme = localStorage.getItem('theme')
+      const osTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+      const initialTheme = userTheme || osTheme
+      
+      if (initialTheme === 'dark') {
+        html.classList.add('dark')
+      }
+      
+      themeToggle.addEventListener('click', () => {
+        html.classList.toggle('dark')
+        localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light')
+      })
+      
+      // Quantity button functionality
+      document.querySelectorAll('.flex.items-center.border.rounded-full button').forEach((button) => {
+        button.addEventListener('click', (e) => {
+          e.preventDefault()
+          const parentDiv = button.parentElement
+          const quantitySpan = parentDiv.querySelector('span')
+          let quantity = parseInt(quantitySpan.textContent)
+      
+          if (button.textContent === '+' && quantity < 10) {
+            quantity++
+          } else if (button.textContent === '-' && quantity > 1) {
+            quantity--
+          }
+      
+          quantitySpan.textContent = quantity
+        })
+      })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,145 @@
+<!-- templates/product_detail.html -->
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ product.name }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 transition-bg">
+
+    <!-- Product Section -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <!-- Product Card -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-bg">
+                <div class="flex flex-col md:flex-row">
+                    <!-- Product Image -->
+                    <div class="md:w-1/2 relative">
+                        <img src="{{ product.picture.url }}" alt="{{ product.name }}"
+                            class="w-full h-96 object-cover product-image" />
+                        {% if product.is_sale %}
+                        <span
+                            class="absolute top-4 right-4 bg-red-500 text-white px-3 py-2 rounded-md text-sm font-bold">SALE</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Product Details -->
+                    <div class="md:w-1/2 p-6">
+                        <div class="mb-4">
+                            <span class="text-indigo-600 font-medium">{{ product.category.name }}</span>
+                            <h2 class="text-3xl font-bold text-gray-800 dark:text-white mt-2">{{ product.name }}</h2>
+                        </div>
+
+
+                        <div class="flex items-baseline mb-6">
+                            <span class="text-3xl font-bold text-gray-900 dark:text-white">
+                                {% if product.is_sale %}
+                                
+                                ${{ product.sale_price }}
+                                {% else %}
+                                ${{ product.price }}
+                                {% endif %}
+                            </span>
+                            {% if product.is_sale %}
+                            <span class="ml-3 text-lg text-gray-500 line-through">${{ product.price }}</span>
+                            <span class="ml-3 bg-green-100 text-green-800 text-sm px-2 py-1 rounded">ON SALE</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">Product Details</h3>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                {{ product.description }}
+                            </p>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="#">
+                                <button id="add-to-cart" value="{{ product.id }}"
+                                    class="flex-grow bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-6 rounded-lg font-medium transition-colors">
+                                    <i class="fas fa-shopping-cart mr-2"></i> Add to Cart
+                                </button>
+                            </a>
+                            <button
+                                class="flex-grow border border-indigo-600 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 py-3 px-6 rounded-lg font-medium transition-colors">
+                                <i class="far fa-heart mr-2"></i> Wishlist
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-bg">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Customer Reviews</h2>
+
+                            {% for review in reviews %}
+            <div class="border-b border-gray-200 dark:border-gray-700 pb-6">
+                <div class="flex items-center mb-2">
+                    <div
+                        class="w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center mr-4">
+                        <span class="text-lg font-semibold text-gray-700 dark:text-white">{{ review.initials }}</span>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-900 dark:text-white">{{ review.name }}</h4>
+                        <div class="flex text-yellow-400 text-sm">
+                            {% for i in "12345" %}
+                                <i class="fas fa-star{% if forloop.counter > review.rating %}-o{% endif %}"></i>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-600 dark:text-gray-300 pl-16">{{ review.comment }}</p>
+            </div>
+            {% empty %}
+            <p class="text-gray-500 dark:text-gray-400">No reviews yet.</p>
+            {% endfor %}
+            </div>
+                    <form method="POST" class="mt-6 space-y-4">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <input type="text" name="name" placeholder="Your Name" required
+                    class="w-full px-4 py-2 rounded-lg border dark:border-gray-700 dark:bg-gray-900 dark:text-white">
+            </div>
+            <input type="number" name="rating" min="1" max="5" placeholder="Rating (1-5)" required
+                class="w-full px-4 py-2 rounded-lg border dark:border-gray-700 dark:bg-gray-900 dark:text-white">
+            <textarea name="comment" placeholder="Your comment..." required
+                class="w-full px-4 py-2 rounded-lg border dark:border-gray-700 dark:bg-gray-900 dark:text-white"></textarea>
+            <button type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg">
+                Submit Review
+            </button>
+        </form>
+
+        </div>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+        $(document).on('click', "#add-to-cart", function (event) {
+            event.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "{% url 'add_to_cart' %}",
+                data: {
+                    'product_id': $("#add-to-cart").val(),
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    action: 'post',
+                },
+                success: function (json) {
+                    console.log(json);
+                },
+                error: function (xhr, errmsg, err) {
+                    alert("An error occurred while adding the product to the cart. Please try again.");
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>

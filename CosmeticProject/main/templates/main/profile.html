@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beauty Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .rtl {
+            direction: rtl;
+        }
+        .ltr {
+            direction: ltr;
+        }
+        .transition-all {
+            transition: all 0.3s ease;
+        }
+        .dark .dark-invert {
+            filter: invert(1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-8">
+            <div class="flex items-center">
+                <img src="{{ customer.image.url }}" alt="Logo" class="w-10 h-10 rounded-full mr-3">
+                <h1 class="text-2xl font-bold">Beauty Cosmetics</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="themeToggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700">
+                    <i class="fas fa-moon dark:hidden"></i>
+                    <i class="fas fa-sun hidden dark:inline"></i>
+                </button>
+                <div class="relative">
+                    <button id="languageToggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center">
+                        <span class="en-lang">EN</span>
+                        <span class="fa-lang hidden">FA</span>
+                    </button>
+                </div>
+                <div class="relative">
+                    <button id="userMenuButton" class="flex items-center space-x-2">
+                        <img src="{{ customer.image.url }}" alt="User" class="w-8 h-8 rounded-full">
+                        <span class="hidden md:inline username">{{ customer.first_name }} {{ customer.last_name }}</span>
+                        <i class="fas fa-chevron-down text-xs"></i>
+                    </button>
+                    <div id="userMenu" class="absolute hidden right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10 border dark:border-gray-700">
+                        <a href="{% url "cart" %}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Orders</a>
+                        <div class="border-t border-gray-200 dark:border-gray-700"></div>
+                        <a href="{% url "logout_url" %}" class="block px-4 py-2 text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700" id="logout">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Sidebar -->
+            <div class="w-full lg:w-1/4">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 sticky top-8">
+                    <div class="flex flex-col items-center mb-6">
+                        <img src="{{ customer.image.url }}" alt="Profile" class="w-24 h-24 rounded-full mb-4 border-4 border-pink-200 dark:border-pink-700">
+                        <h2 class="text-xl font-semibold username">{{ customer.first_name }} {{ customer.last_name }}</h2>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm user-title">Beauty Enthusiast</p>
+                    </div>
+                    <nav class="space-y-2">
+                        <a href="#" class="flex items-center p-3 rounded-lg bg-pink-100 dark:bg-pink-900 text-pink-700 dark:text-pink-200 group">
+                            <i class="fas fa-user-circle mr-3"></i>
+                            <span class="profile-menu">Profile</span>
+                        </a>
+                        <a href = {% url "cart" %}  class="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                            <i class="fas fa-shopping-bag mr-3"></i>
+                            <span class="orders-menu">My Orders</span>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Profile Content -->
+            <div class="w-full lg:w-3/4">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
+                    <h2 class="text-xl font-semibold mb-6 profile-title">Profile Information</h2>
+                    
+                    <form method="POST" action="{% url 'update_profile' %}" class="space-y-4">
+                            {% csrf_token %}
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium mb-1" for="firstName">First Name</label>
+                                <input type="text" id="firstName" value="{{ customer.first_name }}" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 dark:bg-gray-700 dark:border-gray-600">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1" for="lastName">Last Name</label>
+                                <input type="text" id="lastName" value="{{ customer.last_name }}" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 dark:bg-gray-700 dark:border-gray-600">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-1" for="email">Email</label>
+                            <input type="email" id="email" value={{ customer.email }} class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 dark:bg-gray-700 dark:border-gray-600">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-1" for="password">Change Password</label>
+                            <input type="password" id="password" placeholder="Enter new password" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 dark:bg-gray-700 dark:border-gray-600">
+                        </div>
+                        
+                        <div class="pt-4 flex justify-between">
+                            <button type="submit" class="px-6 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all update-btn">
+                                Update Profile
+                            </button>
+                            <a href="{% url "logout_url" %}" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all" id="logout">
+                                Logout
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        // Check for saved theme preference or use preferred color scheme
+        const currentTheme = localStorage.getItem('theme') || 
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        
+        // Apply the current theme
+        body.classList.toggle('dark', currentTheme === 'dark');
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark');
+            const theme = body.classList.contains('dark') ? 'dark' : 'light';
+            localStorage.setItem('theme', theme);
+        });
+
+        // Language toggle
+        const languageToggle = document.getElementById('languageToggle');
+        const englishElements = document.querySelectorAll('.en-lang');
+        const persianElements = document.querySelectorAll('.fa-lang');
+        const persianText = {
+            profileTitle: "اطلاعات پروفایل",
+            recentOrdersTitle: "سفارشات اخیر",
+            orderId: "شماره سفارش",
+            date: "تاریخ",
+            status: "وضعیت",
+            total: "مجموع",
+            actions: "عملیات",
+            view: "مشاهده",
+            updateBtn: "به‌روزرسانی پروفایل",
+            profileMenu: "پروفایل",
+            ordersMenu: "سفارشات من",
+            settingsMenu: "تنظیمات"
+        };
+
+        // Check for saved language preference
+        const currentLang = localStorage.getItem('lang') || 'en';
+        if (currentLang === 'fa') {
+            toggleLanguage();
+        }
+
+        languageToggle.addEventListener('click', toggleLanguage);
+
+        function toggleLanguage() {
+            englishElements.forEach(el => el.classList.toggle('hidden'));
+            persianElements.forEach(el => el.classList.toggle('hidden'));
+            
+            if (englishElements[0].classList.contains('hidden')) {
+                // Switch to Persian
+                body.classList.add('rtl');
+                body.classList.remove('ltr');
+                localStorage.setItem('lang', 'fa');
+                
+                // Update text content
+                document.querySelector('.profile-title').textContent = persianText.profileTitle;
+                document.querySelector('.loyalty-title').textContent = persianText.loyaltyTitle;
+                document.querySelector('.recent-orders-title').textContent = persianText.recentOrdersTitle;
+                document.querySelector('.points-title').textContent = persianText.pointsTitle;
+                document.querySelector('.progress-text').textContent = persianText.progressText;
+                document.querySelector('.update-btn').textContent = persianText.updateBtn;
+                document.querySelector('.view-btn').textContent = persianText.view;
+                document.querySelector('.profile-menu').textContent = persianText.profileMenu;
+                document.querySelector('.orders-menu').textContent = persianText.ordersMenu;
+                document.querySelector('.wishlist-menu').textContent = persianText.wishlistMenu;
+                document.querySelector('.address-menu').textContent = persianText.addressMenu;
+                document.querySelector('.rewards-menu').textContent = persianText.rewardsMenu;
+                document.querySelector('.settings-menu').textContent = persianText.settingsMenu;
+                
+                // Update table headers
+                const ths = document.querySelectorAll('th');
+                ths[0].textContent = persianText.orderId;
+                ths[1].textContent = persianText.date;
+                ths[2].textContent = persianText.status;
+                ths[3].textContent = persianText.total;
+                ths[4].textContent = persianText.actions;
+            } else {
+                // Switch to English
+                body.classList.add('ltr');
+                body.classList.remove('rtl');
+                localStorage.setItem('lang', 'en');
+                
+                // Revert text content to English
+                document.querySelector('.profile-title').textContent = "Profile Information";
+                document.querySelector('.recent-orders-title').textContent = "Recent Orders";
+                document.querySelector('.update-btn').textContent = "Update Profile";
+                document.querySelector('.view-btn').textContent = "View";
+                document.querySelector('.profile-menu').textContent = "Profile";
+                document.querySelector('.orders-menu').textContent = "My Orders";
+                document.querySelector('.settings-menu').textContent = "Settings";
+                
+                // Revert table headers to English
+                const ths = document.querySelectorAll('th');
+                ths[0].textContent = "Order ID";
+                ths[1].textContent = "Date";
+                ths[2].textContent = "Status";
+                ths[3].textContent = "Total";
+                ths[4].textContent = "Actions";
+            }
+        }
+
+        // User menu toggle
+        const userMenuButton = document.getElementById('userMenuButton');
+        const userMenu = document.getElementById('userMenu');
+
+        userMenuButton.addEventListener('click', () => {
+            userMenu.classList.toggle('hidden');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!userMenuButton.contains(e.target) && !userMenu.contains(e.target)) {
+                userMenu.classList.add('hidden');
+            }
+        });
+
+        // Logout functionality
+        document.getElementById('logout').addEventListener('click', (e) => {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>

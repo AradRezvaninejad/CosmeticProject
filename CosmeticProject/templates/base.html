@@ -1,0 +1,95 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Cosmetic Shop{% endblock %}</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        .rtl { direction: rtl; }
+        .ltr { direction: ltr; }
+        .dark { background-color: #1a202c; color: #f7fafc; }
+        .dark .bg-white { background-color: #2d3748; }
+        .dark .text-gray-800 { color: #f7fafc; }
+        .dark .border-gray-200 { border-color: #4a5568; }
+        .dark .bg-gray-100 { background-color: #4a5568; }
+        .dark .bg-gray-50 { background-color: #2d3748; }
+        .dark .text-gray-600 { color: #cbd5e0; }
+        .dark .bg-blue-600:hover { background-color: #4299e1; }
+        .transition-all { transition: all 0.3s ease; }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 transition-all">
+
+    <!-- Header -->
+    {% include 'partials/header.html' %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}
+        <!-- صفحه اصلی یا سایر صفحات محتوا را اینجا درج می‌کنند -->
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    {% include 'partials/footer.html' %}
+
+    <!-- Scripts -->
+    <script>
+        const languageToggle = document.getElementById('language-toggle');
+        const languageText = document.getElementById('language-text');
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        let currentLanguage = 'en';
+        let isDarkMode = localStorage.getItem('darkMode') === 'true' || 
+                        (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        if (languageToggle) {
+            languageToggle.addEventListener('click', () => {
+                currentLanguage = currentLanguage === 'en' ? 'fa' : 'en';
+                document.querySelectorAll('[data-en], [data-en-placeholder]').forEach(element => {
+                    if (element.dataset[currentLanguage]) {
+                        if (element.placeholder && element.dataset[`${currentLanguage}-placeholder`]) {
+                            element.placeholder = element.dataset[`${currentLanguage}-placeholder`];
+                        } else {
+                            element.textContent = element.dataset[currentLanguage];
+                        }
+                    }
+                });
+                languageText.textContent = currentLanguage === 'en' ? 'English' : 'فارسی';
+            });
+        }
+
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                const isDark = document.documentElement.classList.toggle('dark');
+                localStorage.setItem('darkMode', isDark);
+                themeIcon.classList.toggle('fa-moon');
+                themeIcon.classList.toggle('fa-sun');
+            });
+        }
+
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    </script>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

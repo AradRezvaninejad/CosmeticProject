@@ -19,6 +19,10 @@ from django.urls import path,include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("",include("main.urls"))
-    path()
+    path("",include("main.urls")),
+    path("cart/",include("cart.urls")),
+    path("Blog/",include("Blog.urls")),
+    # path("Admin/",include("dashboard_admin.urls"))
+
+
 ]

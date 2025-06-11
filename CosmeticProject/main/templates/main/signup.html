@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmetic Signup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            light: '#ff9a9e',
+                            dark: '#ff6b6b'
+                        },
+                        secondary: {
+                            light: '#f6d365',
+                            dark: '#fda085'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .input-focus:focus {
+            box-shadow: 0 0 0 3px rgba(255, 154, 158, 0.3);
+            border-color: #ff9a9e;
+        }
+        .dark .input-focus:focus {
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.3);
+            border-color: #ff6b6b;
+        }
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px -5px rgba(255, 154, 158, 0.6);
+        }
+        .dark .btn-hover:hover {
+            box-shadow: 0 5px 15px -5px rgba(255, 107, 107, 0.6);
+        }
+        [dir="rtl"] input {
+            text-align: right;
+        }
+        [dir="rtl"] .toggle-container {
+            direction: ltr;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4 transition-colors duration-300">
+    <div class="w-full max-w-md bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden p-8 transition-colors duration-300">
+        <!-- Header with theme and language toggles -->
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex items-center space-x-2 toggle-container">
+                <button id="themeToggle" class="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    <i class="fas fa-moon dark:hidden"></i>
+                    <i class="fas fa-sun hidden dark:block"></i>
+                </button>
+                <button id="languageToggle" class="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    <span class="en">EN</span>
+                    <span class="fa hidden">FA</span>
+                </button>
+            </div>
+            <div class="text-primary-light dark:text-primary-dark">
+                <i class="fas fa-spa text-3xl"></i>
+            </div>
+        </div>
+        
+        <!-- Form content -->
+        <div class="text-center mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2 en">Join Our Beauty Community</h2>
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2 fa hidden">به جامعه زیبایی ما بپیوندید</h2>
+            <p class="text-gray-500 dark:text-gray-400 en">Create your account to get started</p>
+            <p class="text-gray-500 dark:text-gray-400 fa hidden">حساب کاربری خود را ایجاد کنید</p>
+        </div>
+        
+        <form id="signupForm" class="space-y-5" method="POST" action="{% url 'signup' %}">
+            {% csrf_token %}
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 en">First Name</label>
+                    <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 fa hidden">نام</label>
+                    <input type="text" id="firstName" name="firstName" required 
+                           class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none input-focus transition-colors"
+                           placeholder="First name" data-en-placeholder="First name" data-fa-placeholder="نام">
+                </div>
+                <div>
+                    <label for="lastName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 en">Last Name</label>
+                    <label for="lastName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 fa hidden">نام خانوادگی</label>
+                    <input type="text" id="lastName" name="lastName" required 
+                           class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none input-focus transition-colors"
+                           placeholder="Last name" data-en-placeholder="Last name" data-fa-placeholder="نام خانوادگی">
+                </div>
+            </div>
+            
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 en">Email</label>
+                <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 fa hidden">ایمیل</label>
+                <input type="email" id="email" name="email" required 
+                       class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none input-focus transition-colors"
+                       placeholder="Your email" data-en-placeholder="Your email" data-fa-placeholder="ایمیل شما">
+            </div>
+            
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 en">Password</label>
+                <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 fa hidden">رمز عبور</label>
+                <div class="relative">
+                    <input type="password" id="password" name="password" required 
+                           class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none input-focus transition-colors pr-10"
+                           placeholder="••••••••" data-en-placeholder="••••••••" data-fa-placeholder="••••••••">
+                    <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" id="togglePassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="pt-2">
+                <a href="{% url 'verify_email' %}"><button type="submit" class="w-full bg-gradient-to-r from-primary-light to-secondary-light dark:from-primary-dark dark:to-secondary-dark text-white py-2 px-4 rounded-lg font-medium btn-hover transition-all"></a>
+
+                    <span class="en">Sign Up</span>
+                    <span class="fa hidden">ثبت نام</span>
+                </button>
+            </div>
+        </form>
+        
+        <div class="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
+            <span class="en">Already have an account? <a href="{% url 'login' %}" class="font-medium text-primary-light dark:text-primary-dark hover:underline">Log in</a></span>
+            <span class="fa hidden">حساب کاربری دارید؟ <a href="{% url 'login' %}" class="font-medium text-primary-light dark:text-primary-dark hover:underline">ورود</a></span>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
+        });
+        
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+        
+        const languageToggle = document.getElementById('languageToggle');
+        languageToggle.addEventListener('click', function() {
+            const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
+            document.documentElement.setAttribute('dir', isRTL ? 'ltr' : 'rtl');
+            document.documentElement.setAttribute('lang', isRTL ? 'en' : 'fa');
+            
+            document.querySelectorAll('.en').forEach(el => el.classList.toggle('hidden'));
+            document.querySelectorAll('.fa').forEach(el => el.classList.toggle('hidden'));
+            
+            const inputs = document.querySelectorAll('input[data-en-placeholder]');
+            inputs.forEach(input => {
+                const placeholder = isRTL ? input.dataset.enPlaceholder : input.dataset.faPlaceholder;
+                input.setAttribute('placeholder', placeholder);
+            });
+            
+            localStorage.setItem('language', isRTL ? 'en' : 'fa');
+        });
+        
+        if (localStorage.getItem('language') === 'fa') {
+            languageToggle.click();
+        }
+        
+        const togglePassword = document.getElementById('togglePassword');
+        togglePassword.addEventListener('click', function() {
+            const passwordField = document.getElementById('password');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                this.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            } else {
+                passwordField.type = 'password';
+                this.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+        });
+    </script>
+</body>
+</html>

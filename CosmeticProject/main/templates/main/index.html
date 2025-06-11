@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmetic Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .rtl {
+            direction: rtl;
+        }
+        .ltr {
+            direction: ltr;
+        }
+        .dark {
+            background-color: #1a202c;
+            color: #f7fafc;
+        }
+        .dark .bg-white {
+            background-color: #2d3748;
+        }
+        .dark .text-gray-800 {
+            color: #f7fafc;
+        }
+        .dark .border-gray-200 {
+            border-color: #4a5568;
+        }
+        .dark .bg-gray-100 {
+            background-color: #4a5568;
+        }
+        .dark .bg-gray-50 {
+            background-color: #2d3748;
+        }
+        .dark .text-gray-600 {
+            color: #cbd5e0;
+        }
+        .dark .bg-blue-600:hover {
+            background-color: #4299e1;
+        }
+        .transition-all {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 transition-all">
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-sm">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <i class="fas fa-spa text-2xl text-pink-500 mr-2"></i>
+                    <h1 class="text-xl font-bold text-gray-800 dark:text-white" id="logo-text">Glamour Cosmetics</h1>
+                </div>
+                
+                <!-- Navigation and Controls -->
+                <div class="flex items-center space-x-4">
+                    <!-- Login/Signup Buttons (visible on larger screens) -->
+                     
+                <div class="hidden md:flex space-x-2">
+                {% if request.session.customer_id %}
+                    <!-- کاربر لاگین کرده: دکمه پروفایل -->
+                    <a href="{% url 'profile' %}" class="text-pink-500 border border-pink-500 hover:bg-pink-50 dark:hover:bg-gray-700 px-4 py-1 rounded-full text-sm font-medium transition">
+                    Profile
+                    </a>
+                {% else %}
+                    <!-- کاربر لاگین نکرده: دکمه ورود و ثبت‌نام -->
+                    <a href="{% url 'login' %}" class="text-pink-500 border border-pink-500 hover:bg-pink-50 dark:hover:bg-gray-700 px-4 py-1 rounded-full text-sm font-medium transition" data-en="Login" data-fa="ورود">Login</a>
+
+                    <a href="{% url 'signup' %}">
+                    <button class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-1 rounded-full text-sm font-medium transition" data-en="Sign Up" data-fa="ثبت نام">
+                        ثبت‌نام
+                    </button>
+                    </a>
+                {% endif %}
+                </div>
+                    
+                    <!-- Language Toggle -->
+                    <button id="language-toggle" class="flex items-center text-gray-600 dark:text-gray-300 hover:text-pink-500">
+                        <i class="fas fa-language mr-1"></i>
+                        <span id="language-text">English</span>
+                    </button>
+                    
+                    <!-- Dark/Light Mode Toggle -->
+                    <button id="theme-toggle" class="text-gray-600 dark:text-gray-300 hover:text-pink-500">
+                        <i id="theme-icon" class="fas fa-moon"></i>
+                    </button>
+                    
+                    <!-- Cart -->
+                     {% if user.is_authenticated %}
+                <a href="{% url 'cart' %}" class="relative text-gray-600 dark:text-gray-300 hover:text-pink-500">
+            {% else %}
+                <a href="{% url 'login' %}" class="relative text-gray-600 dark:text-gray-300 hover:text-pink-500">{% endif %}
+
+                    <button>
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{{ cart_item_count }}</span>
+                    </button>
+                </a>
+
+                    
+                    <!-- Mobile Menu Button -->
+                    <button id="mobile-menu-button" class="md:hidden text-gray-600 dark:text-gray-300">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Navigation -->
+            <nav id="main-nav" class="hidden md:flex justify-center mt-4">
+                <ul class="flex space-x-8" id="nav-links">
+                    <li>
+                    <a href="{% url 'allproducts' %}" class="text-gray-800 dark:text-white hover:text-pink-500 font-medium" data-en="Products" data-fa="محصولات">
+                    Products
+                    </a>
+                    </li>
+                    <li><a href="{% url 'Blog' %}" class="text-gray-800 dark:text-white hover:text-pink-500 font-medium" data-en="About" data-fa="درباره ما">Blog</a></li>
+                </ul>
+            </nav>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-gray-800 py-2 px-4">
+            <ul class="flex flex-col space-y-2" id="mobile-nav-links">
+                <li><a href="#" class="block py-2 text-gray-800 dark:text-white hover:text-pink-500" data-en="Home" data-fa="خانه">Home</a></li>
+                <li><a href="#" class="block py-2 text-gray-800 dark:text-white hover:text-pink-500" data-en="Products" data-fa="محصولات">Products</a></li>
+                <li><a href="#" class="block py-2 text-gray-800 dark:text-white hover:text-pink-500" data-en="About" data-fa="درباره ما">About</a></li>
+                <li><a href="#" class="block py-2 text-gray-800 dark:text-white hover:text-pink-500" data-en="Contact" data-fa="تماس">Contact</a></li>
+                <!-- Mobile Login/Signup Buttons -->
+                <li class="pt-2 border-t border-gray-200 dark:border-gray-700">
+                    <button class="w-full text-left py-2 text-pink-500 font-medium" data-en="Login" data-fa="ورود">Login</button>
+                </li>
+                <li>
+                    <button class="w-full text-left py-2 text-pink-500 font-medium" data-en="Sign Up" data-fa="ثبت نام">Sign Up</button>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section 
+  class="bg-gradient-to-r from-pink-100 to-purple-100 dark:from-gray-700 dark:to-gray-800 py-16
+         animate-fadeSlideUp"
+>
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col md:flex-row items-center">
+      <div class="md:w-1/2 mb-8 md:mb-0">
+        <h2 class="text-4xl font-bold text-gray-800 dark:text-white mb-4" data-en="Discover Your Beauty" data-fa="زیبایی خود را کشف کنید">
+          Discover Your Beauty
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300 mb-6" data-en="Premium cosmetics for your perfect look. Shop our new collection today!" data-fa="لوازم آرایشی با کیفیت بالا برای ظاهر بی نقص شما. امروز از مجموعه جدید ما خرید کنید!">
+          Premium cosmetics for your perfect look. Shop our new collection today!
+        </p>
+        <a href="{% url 'allproducts' %}" 
+           class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-full font-medium transition inline-block text-center
+                  animate-pulseGlow"
+           data-en="Shop Now" data-fa="همین حالا بخرید">
+          Shop Now
+        </a>
+      </div>
+      <div class="md:w-1/2 animate-float">
+        <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" 
+             alt="Cosmetic products" 
+             class="rounded-lg shadow-lg w-full">
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes fadeSlideUp {
+    0% {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-fadeSlideUp {
+    animation: fadeSlideUp 1s ease forwards;
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% {
+      box-shadow: 0 0 10px 2px rgba(236, 72, 153, 0.7);
+    }
+    50% {
+      box-shadow: 0 0 20px 6px rgba(236, 72, 153, 1);
+    }
+  }
+  .animate-pulseGlow {
+    animation: pulseGlow 2.5s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+</style>
+
+    <!-- Featured Products -->
+    <section class="py-12 bg-white dark:bg-gray-800 animate-fadeSlideUp">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-800 dark:text-white mb-8" data-en="Featured Products" data-fa="محصولات ویژه">
+            Featured Products
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {% for product in products %}
+                <a href="{% url 'product' product.pk %}" class="block transform transition hover:scale-[1.03] hover:shadow-xl rounded-lg overflow-hidden">
+                    <div class="bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden">
+                        <div class="relative">
+                            <img src="{{ product.picture.url }}" alt="{{ product.name }}" class="w-full h-64 object-cover">
+                            {% if product.is_sale %}
+                                <div class="absolute top-2 right-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-full">SALE</div>
+                            {% else %}
+                                <div class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">NEW</div>
+                            {% endif %}
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white" data-en="{{ product.name }}" data-fa="{{ product.name }}">{{ product.name }}</h3>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm mt-1" data-en="{{ product.description }}" data-fa="{{ product.description }}">{{ product.description|truncatewords:10 }}</p>
+                            <div class="flex justify-between items-center mt-4">
+                                {% if product.is_sale %}
+                                    <span class="text-pink-500 font-bold">{{ product.sale_price }} تومان</span>
+                                {% else %}
+                                    <span class="text-pink-500 font-bold">{{ product.price }} تومان</span>
+                                {% endif %}
+                                <button class="text-white bg-pink-500 hover:bg-pink-600 px-3 py-1 rounded-full text-sm" data-en="Add to Cart" data-fa="افزودن به سبد">افزودن به سبد</button>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% empty %}
+                <p class="text-center col-span-4 text-gray-500 dark:text-gray-300">محصولی یافت نشد.</p>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-8">
+            <a href="{% url 'allproducts' %}">
+                <button class="border border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-white px-6 py-2 rounded-full font-medium transition animate-pulseGlow" data-en="View All Products" data-fa="مشاهده همه محصولات">
+                    View All Products
+                </button>
+            </a>
+        </div>
+    </div>
+</section>
+
+<style>
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fadeSlideUp {
+  animation: fadeSlideUp 1s ease forwards;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 10px 2px rgba(236, 72, 153, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 20px 6px rgba(236, 72, 153, 1);
+  }
+}
+.animate-pulseGlow {
+  animation: pulseGlow 2.5s ease-in-out infinite;
+}
+</style>
+
+
+    <!-- Testimonials -->
+    <section class="py-12 bg-gray-100 dark:bg-gray-700">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center text-gray-800 dark:text-white mb-8" data-en="What Our Customers Say" data-fa="نظرات مشتریان ما">What Our Customers Say</h2>
+            
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
+    {% for review in reviews %}
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+        <div class="flex items-center mb-4">
+            <!-- User Avatar Placeholder with Initials -->
+            <div class="w-12 h-12 rounded-full bg-pink-500 text-white flex items-center justify-center text-lg font-bold">
+                {{ review.initials }}
+            </div>
+
+            <!-- Reviewer Name + Stars -->
+            <div class="ml-4">
+                <h4 class="font-semibold text-gray-800 dark:text-white">{{ review.name }}</h4>
+                <div class="flex text-yellow-400">
+                    {% for i in "12345"|slice:":review.rating"|make_list %}
+                        <i class="fas fa-star"></i>
+                    {% endfor %}
+                    {% for i in "12345"|slice:"review.rating:"|make_list %}
+                        <i class="far fa-star"></i>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Comment Body -->
+        <p class="text-gray-600 dark:text-gray-300">{{ review.comment }}</p>
+    </div>
+    {% empty %}
+    <p class="text-center text-gray-500 col-span-3">No reviews yet.</p>
+    {% endfor %}
+</div>
+
+            
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="py-12 bg-pink-50 dark:bg-gray-800">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl mx-auto text-center">
+                <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-4" data-en="Stay Updated" data-fa="به روز بمانید">Stay Updated</h2>
+                <p class="text-gray-600 dark:text-gray-300 mb-6" data-en="Subscribe to our newsletter for the latest products and offers." data-fa="برای دریافت جدیدترین محصولات و پیشنهادات در خبرنامه ما عضو شوید.">Subscribe to our newsletter for the latest products and offers.</p>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input type="email" placeholder="Your email address" class="flex-grow px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pink-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" data-en-placeholder="Your email address" data-fa-placeholder="آدرس ایمیل شما">
+                    <a href=""><button class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-full font-medium transition" data-en="Subscribe" data-fa="عضویت">Subscribe</button></a>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-spa text-2xl text-pink-500 mr-2"></i>
+                        <h3 class="text-xl font-bold" id="footer-logo-text">Glamour Cosmetics</h3>
+                    </div>
+                    <p class="text-gray-400" data-en="Premium beauty products for everyone." data-fa="محصولات زیبایی با کیفیت بالا برای همه.">Premium beauty products for everyone.</p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4" data-en="Quick Links" data-fa="لینک های سریع">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-pink-500 transition" data-en="Home" data-fa="خانه">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-pink-500 transition" data-en="Products" data-fa="محصولات">Products</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-pink-500 transition" data-en="About Us" data-fa="درباره ما">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-pink-500 transition" data-en="Contact" data-fa="تماس">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4" data-en="Customer Service" data-fa="خدمات مشتری">Customer Service</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-pink-500 transition" data-en="FAQs" data-fa="سوالات متداول">FAQs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-pink-500 transition" data-en="Shipping Policy" data-fa="سیاست حمل و نقل">Shipping Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-pink-500 transition" data-en="Return Policy" data-fa="سیاست بازگشت">Return Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-pink-500 transition" data-en="Privacy Policy" data-fa="سیاست حفظ حریم خصوصی">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4" data-en="Contact Us" data-fa="با ما در تماس باشید">Contact Us</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-map-marker-alt text-pink-500 mr-2"></i>
+                            <span data-en="123 Beauty St, New York" data-fa="خیابان زیبایی 123، نیویورک">123 Beauty St, New York</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone text-pink-500 mr-2"></i>
+                            <span>+1 (555) 123-4567</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope text-pink-500 mr-2"></i>
+                            <span>info@glamourcosmetics.com</span>
+                        </li>
+                    </ul>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-400 hover:text-pink-500"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-pink-500"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-pink-500"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-pink-500"><i class="fab fa-pinterest-p"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
+                <p data-en="© 2023 Glamour Cosmetics. All rights reserved." data-fa="© 2023 گلمور کازمتیکس. تمام حقوق محفوظ است.">© 2023 Glamour Cosmetics. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+<script>
+    // Language Toggle
+    const languageToggle = document.getElementById('language-toggle');
+    const languageText = document.getElementById('language-text');
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    let currentLanguage = 'en';
+    let isDarkMode = localStorage.getItem('darkMode') === 'true' || 
+                    (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    
+    // Set initial theme
+    if (isDarkMode) {
+        document.documentElement.classList.add('dark');
+        themeIcon.classList.replace('fa-moon', 'fa-sun');
+    }
+
+    // Toggle language
+    languageToggle.addEventListener('click', () => {
+        currentLanguage = currentLanguage === 'en' ? 'fa' : 'en';
+
+        document.querySelectorAll('[data-en], [data-en-placeholder]').forEach(element => {
+            if (element.dataset[currentLanguage]) {
+                if (element.placeholder && element.dataset[`${currentLanguage}-placeholder`]) {
+                    element.placeholder = element.dataset[`${currentLanguage}-placeholder`];
+                } else {
+                    element.textContent = element.dataset[currentLanguage];
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

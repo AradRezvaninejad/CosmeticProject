@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <title>تایید ایمیل</title>
+</head>
+<body>
+    <h2>کد تایید ایمیل خود را وارد کنید</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="code" placeholder="کد تأیید" required />
+        <button type="submit">تایید</button>
+    </form>
+
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>

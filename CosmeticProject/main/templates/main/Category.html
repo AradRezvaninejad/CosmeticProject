@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmetic Product Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .rtl {
+            direction: rtl;
+        }
+        .ltr {
+            direction: ltr;
+        }
+        .transition-bg {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .product-image {
+            transition: transform 0.3s ease;
+        }
+        .product-image:hover {
+            transform: scale(1.05);
+        }
+        .blur-bg {
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+        .dark .blur-bg {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .language-toggle {
+            transform: scale(0.9);
+            transition: transform 0.2s ease;
+        }
+        .language-toggle:hover {
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 transition-bg" data-theme="light">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-md transition-bg">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                <button id="themeToggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700">
+                    <i class="fas fa-moon dark:hidden"></i>
+                    <i class="fas fa-sun hidden dark:block text-yellow-300"></i>
+                </button>
+                <button id="languageToggle" class="language-toggle px-4 py-2 rounded-full bg-indigo-600 text-white flex items-center">
+                    <span id="currentLanguage" class="font-medium">English</span>
+                    <i class="fas fa-globe ml-2 rtl:ml-0 rtl:mr-2"></i>
+                </button>
+            </div>
+            <h1 class="text-xl font-bold text-gray-800 dark:text-white" data-en="Premium Cosmetics" data-fa="لوازم آرایشی لوکس">Premium Cosmetics</h1>
+        </div>
+    </header>
+
+    <!-- Products Section -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Category Filter -->
+        <div class="flex justify-end mb-8">
+<div class="relative inline-block text-left">
+    <button id="categoryDropdownButton" class="px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium flex items-center">
+        <span>Categories</span>
+        <i class="fas fa-chevron-down ml-2"></i>
+    </button>
+    <div id="categoryDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-10">
+        <div class="py-1">
+            <a href="{% url 'category_url' 'all'%}"
+            class="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-indigo-100 dark:hover:bg-indigo-900">
+                All
+            </a>
+            <a href="{% url 'category_url' 'lipstick' %}"
+            class="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-indigo-100 dark:hover:bg-indigo-900">
+                lipstick
+            </a>
+                        <a href="{% url 'category_url' 'tshirt' %}"
+            class="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-indigo-100 dark:hover:bg-indigo-900">
+                t shirt
+            </a>
+                                    <a href="{% url 'category_url' 'eyebrow' %}"
+            class="block px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-indigo-100 dark:hover:bg-indigo-900">
+                eyebrow
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const button = document.getElementById('categoryDropdownButton');
+    const dropdown = document.getElementById('categoryDropdown');
+
+    button.addEventListener('click', function(event) {
+        event.stopPropagation();
+        dropdown.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', function() {
+        if (!dropdown.classList.contains('hidden')) {
+            dropdown.classList.add('hidden');
+        }
+    });
+});
+</script>
+        </div>
+        <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
+    دسته: {{ category.name }}
+</h2>
+
+
+        <!-- Product Grid -->
+       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+    {% for product in products %}
+        <a href="{% url 'product' product.pk %}" class="block">
+            <div class="bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition">
+                <div class="relative">
+                    <img src="{{ product.picture.url }}" alt="{{ product.name }}" class="w-full h-64 object-cover">
+                    {% if product.is_sale %}
+                        <div class="absolute top-2 right-2 bg-pink-500 text-white text-xs px-2 py-1 rounded-full">SALE</div>
+                    {% else %}
+                        <div class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">NEW</div>
+                    {% endif %}
+                </div>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-white">{{ product.name }}</h3>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mt-1">{{ product.description|truncatewords:10 }}</p>
+                    <div class="flex justify-between items-center mt-4">
+                        {% if product.is_sale %}
+                            <span class="text-pink-500 font-bold">{{ product.sale_price }} تومان</span>
+                        {% else %}
+                            <span class="text-pink-500 font-bold">{{ product.price }} تومان</span>
+                        {% endif %}
+                        <button class="text-white bg-pink-500 hover:bg-pink-600 px-3 py-1 rounded-full text-sm">افزودن به سبد</button>
+                    </div>
+                </div>
+            </div>
+        </a>
+    {% empty %}
+        <p class="text-center col-span-4 text-gray-500 dark:text-gray-300">محصولی یافت نشد.</p>
+    {% endfor %}
+</div>
+</body>
+</html>

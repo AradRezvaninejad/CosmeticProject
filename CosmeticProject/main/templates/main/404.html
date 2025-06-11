@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found - Glamour Beauty</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'rose-blush': '#FFF1F4',
+                        'petal-pink': '#FFD6E8',
+                        'dusty-rose': '#DB9DA5',
+                        'rose-taupe': '#9D616B',
+                        'mauve-purple': '#7D4F6F',
+                        'blush-gold': '#E8CBB0',
+                    },
+                    fontFamily: {
+                        'heading': ['Playfair Display', 'serif'],
+                        'body': ['Montserrat', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'sway': 'sway 8s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        sway: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/css">
+        .cosmetic-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .cosmetic-shimmer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, rgba(255,255,255,0) 10%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 90%);
+            transform: rotate(30deg);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: rotate(30deg) translate(-50%, -50%); }
+            100% { transform: rotate(30deg) translate(50%, 50%); }
+        }
+        .mirror-effect {
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #fff 0%, rgba(255,255,255,0.4) 50%, transparent 70%);
+            box-shadow: 0 15px 25px -10px rgba(157,97,107,0.3);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen flex flex-col font-body transition-bg" data-theme="light">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-md transition-bg">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                <button id="themeToggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700">
+                    <i class="fas fa-moon dark:hidden"></i>
+                    <i class="fas fa-sun hidden dark:block text-yellow-300"></i>
+                </button>
+                <button id="languageToggle" class="language-toggle px-4 py-2 rounded-full bg-indigo-600 text-white flex items-center">
+                    <span id="currentLanguage" class="font-medium">English</span>
+                    <i class="fas fa-globe ml-2 rtl:ml-0 rtl:mr-2"></i>
+                </button>
+            </div>
+            <h1 class="text-xl font-bold text-gray-800 dark:text-white">Premium Cosmetics</h1>
+            <div class="flex items-center">
+                <button class="p-2 relative">
+                    <i class="fas fa-shopping-cart text-gray-700 dark:text-white"></i>
+                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                </button>
+                <button class="ml-4 p-2">
+                    <i class="fas fa-user text-gray-700 dark:text-white"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex-grow flex items-center justify-center">
+    <div class="max-w-6xl mx-auto px-4 py-12 relative overflow-hidden bg-white dark:bg-gray-700 rounded-xl shadow-lg my-8 blur-bg">
+        <!-- Background elements -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <!-- Decorative elements -->
+            <div class="absolute -top-20 -left-20 w-64 h-64 rounded-full bg-petal-pink opacity-40 blur-3xl"></div>
+            <div class="absolute -bottom-40 -right-20 w-80 h-80 rounded-full bg-blush-gold opacity-30 blur-3xl"></div>
+            
+            <!-- Floral elements -->
+            <div class="absolute top-1/4 left-1/6 w-32 h-32">
+                <svg viewBox="0 0 200 200" class="w-full h-full animate-float">
+                    <path d="M100,50 C110,30 140,30 150,50 C160,70 160,100 150,120 C140,140 110,140 100,120 C90,140 60,140 50,120 C40,100 40,70 50,50 C60,30 90,30 100,50 Z" fill="#DB9DA5" opacity="0.3"/>
+                </svg>
+            </div>
+            
+            <div class="absolute bottom-1/3 right-1/5 w-20 h-20 animate-sway">
+                <svg viewBox="0 0 200 200" class="w-full h-full">
+                    <path d="M100,50 Q150,70 120,110 Q90,130 80,90 Q60,70 100,50 Z" fill="#9D616B" opacity="0.2"/>
+                </svg>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="relative z-10 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-10 md:mb-0 text-center">
+                <div class="max-w-md mx-auto">
+                    <div class="mirror-effect w-44 h-44 md:w-56 md:h-56 mx-auto bg-white/50 backdrop-blur-md flex items-center justify-center mb-6">
+                        <div class="bg-gradient-to-br from-rose-blush to-petal-pink w-32 h-32 md:w-40 md:h-40 rounded-full flex items-center justify-center shadow-lg">
+                            <span class="text-6xl md:text-7xl font-bold text-rose-taupe">404</span>
+                        </div>
+                    </div>
+                    
+                    <h1 class="text-4xl md:text-5xl font-heading font-semibold text-rose-taupe mb-4">Lost in Beauty</h1>
+                    <p class="text-lg text-rose-taupe/80 mb-6">
+                        The page you're looking for has vanished like yesterday's makeup.
+                        But don't worry—your perfect beauty destination awaits.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="{% url 'index'%}" class="cosmetic-shimmer bg-gradient-to-r from-petal-pink to-blush-gold text-mauve-purple font-medium py-3 px-6 rounded-full hover:opacity-90 transition-all duration-300 shadow-lg flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L9.414 11H13a1 1 0 100-2H9.414l1.293-1.293z" clip-rule="evenodd" />
+                            </svg>
+                            Back to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="md:w-1/2 flex justify-center">
+                <div class="relative max-w-md">
+                    <!-- Lipstick Collection -->
+                    <div class="relative w-64 h-96">
+                        <!-- Mirror -->
+                        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-40 bg-gradient-to-b from-white to-gray-100 rounded-t-lg shadow-lg border-t-8 border-gray-200"></div>
+                        
+                        <!-- Lipsticks -->
+                        <div class="absolute bottom-0 flex items-end justify-center w-full gap-6">
+                            <div class="w-6 h-48 flex flex-col items-center">
+                                <div class="w-6 h-36 rounded-t-lg bg-gradient-to-b from-red-500 to-red-300"></div>
+                                <div class="w-6 h-12 bg-gradient-to-b from-rose-taupe to-rose-taupe/80 rounded-b-lg"></div>
+                            </div>
+                            
+                            <div class="w-6 h-40 flex flex-col items-center">
+                                <div class="w-6 h-28 rounded-t-lg bg-gradient-to-b from-pink-400 to-pink-200"></div>
+                                <div class="w-6 h-12 bg-gradient-to-b from-rose-taupe to-rose-taupe/80 rounded-b-lg"></div>
+                            </div>
+                            
+                            <div class="w-6 h-44 flex flex-col items-center">
+                                <div class="w-6 h-32 rounded-t-lg bg-gradient-to-b from-purple-500 to-purple-300"></div>
+                                <div class="w-6 h-12 bg-gradient-to-b from-rose-taupe to-rose-taupe/80 rounded-b-lg"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Powder compact -->
+                        <div class="absolute right-4 top-40 w-16 h-16 bg-gradient-to-br from-blush-gold to-amber-100 rounded-lg shadow-lg flex items-center justify-center">
+                            <div class="w-12 h-12 bg-gray-200/20 rounded-full"></div>
+                        </div>
+                        
+                        <!-- Blush brush -->
+                        <div class="absolute left-4 top-60 rotate-45">
+                            <div class="w-3 h-12 bg-blush-gold/80 rounded-t-full rounded-br-full"></div>
+                            <div class="w-10 h-4 bg-gradient-to-r from-petal-pink to-rose-blush rounded-t-full -translate-y-1 translate-x-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Additional decorative elements -->
+        <div class="absolute bottom-10 right-10 hidden lg:block">
+            <svg width="80" height="80" viewBox="0 0 100 100">
+                <path d="M30,50 Q50,30 70,50 Q50,70 30,50 Z" fill="none" stroke="#9D616B" stroke-opacity="0.2" stroke-width="2" class="animate-sway"/>
+                <path d="M30,50 Q50,65 70,50" fill="none" stroke="#9D616B" stroke-opacity="0.2" stroke-width="2"/>
+            </svg>
+        </div>
+        
+        <div class="absolute top-10 left-10 hidden md:block">
+            <div class="w-2 h-32 bg-gradient-to-b from-petal-pink to-transparent rounded-full"></div>
+        </div>
+    </div>
+    
+    <!-- Custom background wave -->
+    <div class="absolute bottom-0 w-full overflow-hidden">
+        <svg viewBox="0 0 1440 120" preserveAspectRatio="none" class="w-full h-24">
+            <path d="M0,64 L80,58.7 C160,53,320,43,480,48 C640,53,800,75,960,74.7 C1120,75,1280,53,1360,42.7L1440,32L1440,120L1360,120 C1280,120,1120,120,960,120 C800,120,640,120,480,120 C320,120,160,120,80,120L0,120Z" fill="#9D616B" fill-opacity="0.1"></path>
+        </svg>
+    </div>
+</body>
+</html>

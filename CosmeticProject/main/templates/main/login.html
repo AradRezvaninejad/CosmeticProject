@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cosmetic Login | Beauty Community</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                light: "#ff9a9e",
+                dark: "#ff6b6b",
+              },
+              secondary: {
+                light: "#f6d365",
+                dark: "#fda085",
+              },
+              cosmetic: {
+                pink: "#ff9a9e",
+                coral: "#ff6b6b",
+                peach: "#f6d365",
+                orange: "#fda085",
+                lavender: "#d8b5ff",
+                purple: "#845ec2",
+              },
+            },
+            animation: {
+              float: "float 6s ease-in-out infinite",
+              "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+            },
+            keyframes: {
+              float: {
+                "0%, 100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-10px)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      .input-focus:focus {
+        box-shadow: 0 0 0 3px rgba(255, 154, 158, 0.3);
+        border-color: #ff9a9e;
+      }
+      .dark .input-focus:focus {
+        box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.3);
+        border-color: #ff6b6b;
+      }
+      .btn-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px -5px rgba(255, 154, 158, 0.6);
+      }
+      .dark .btn-hover:hover {
+        box-shadow: 0 5px 15px -5px rgba(255, 107, 107, 0.6);
+      }
+      [dir="rtl"] input {
+        text-align: right;
+      }
+      [dir="rtl"] .toggle-container {
+        direction: ltr;
+      }
+      .social-btn {
+        transition: all 0.3s ease;
+      }
+      .social-btn:hover {
+        transform: scale(1.05);
+      }
+      .cosmetic-bubble {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.2;
+        z-index: -1;
+      }
+      .animate-ripple {
+        animation: ripple 1.5s linear infinite;
+      }
+      @keyframes ripple {
+        0% {
+          box-shadow: 0 0 0 0 rgba(255, 154, 158, 0.4);
+        }
+        100% {
+          box-shadow: 0 0 0 20px rgba(255, 154, 158, 0);
+        }
+      }
+      .forgot-password:hover {
+        text-decoration: underline;
+      }
+    </style>
+</head>
+
+<body
+  class="bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4 transition-colors duration-300 min-h-screen overflow-hidden"
+>
+  <!-- Decorative bubbles -->
+  <div
+    class="cosmetic-bubble bg-cosmetic-pink w-32 h-32 -left-16 -top-16 animate-float"
+  ></div>
+  <div
+    class="cosmetic-bubble bg-cosmetic-orange w-24 h-24 -right-12 top-1/4 animate-float animation-delay-1000"
+  ></div>
+  <div
+    class="cosmetic-bubble bg-cosmetic-lavender w-20 h-20 right-1/4 bottom-1/3 animate-float animation-delay-2000"
+  ></div>
+  <div
+    class="cosmetic-bubble bg-cosmetic-peach w-28 h-28 left-1/4 bottom-16 animate-float animation-delay-3000"
+  ></div>
+
+  <div
+    class="w-full max-w-md bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden p-8 transition-colors duration-300 relative z-10 backdrop-blur-sm bg-opacity-90 dark:bg-opacity-90"
+  >
+    <!-- Header with theme and language toggles -->
+    <div class="flex justify-between items-center mb-6">
+      <div class="flex items-center space-x-2 toggle-container">
+        <button
+          id="themeToggle"
+          class="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+        >
+          <i class="fas fa-moon dark:hidden"></i>
+          <i class="fas fa-sun hidden dark:block"></i>
+        </button>
+        <button
+          id="languageToggle"
+          class="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+        >
+          <span class="en">EN</span>
+          <span class="fa hidden">FA</span>
+        </button>
+      </div>
+      <div class="text-primary-light dark:text-primary-dark animate-pulse-slow">
+        <i class="fas fa-spa text-3xl"></i>
+      </div>
+    </div>
+
+    <!-- Form content -->
+    <div class="text-center mb-8">
+      <h2
+        class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2 en"
+      >
+        Welcome Back Beauty
+      </h2>
+      <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2 fa hidden">
+        خوش برگشتی زیبایی
+      </h2>
+      <p class="text-gray-500 dark:text-gray-400 en">
+        Sign in to your account to continue
+      </p>
+      <p class="text-gray-500 dark:text-gray-400 fa hidden">
+        برای ادامه وارد حساب کاربری خود شوید
+      </p>
+    </div>
+
+    <form id="loginForm" class="space-y-5" method="POST" action="{% url 'login' %}">
+      {% csrf_token %}
+      <div>
+        <label
+          for="loginEmail"
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 en"
+          >Email</label
+        >
+        <label
+          for="loginEmail"
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 fa hidden"
+          >ایمیل</label
+        >
+        <div class="relative">
+          <input
+            type="email"
+            id="loginEmail"
+            name="email"
+            required
+            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none input-focus transition-colors pl-10"
+            placeholder="Your email"
+            data-en-placeholder="Your email"
+            data-fa-placeholder="ایمیل شما"
+          />
+          <div
+            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+          >
+            <i class="fas fa-envelope"></i>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label
+          for="loginPassword"
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 en"
+          >Password</label
+        >
+        <label
+          for="loginPassword"
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 fa hidden"
+          >رمز عبور</label
+        >
+        <div class="relative">
+          <input
+            type="password"
+            id="loginPassword"
+            name="password"
+            required
+            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none input-focus transition-colors pr-10 pl-10"
+            placeholder="••••••••"
+            data-en-placeholder="••••••••"
+            data-fa-placeholder="••••••••"
+          />
+          <div
+            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+          >
+            <i class="fas fa-lock"></i>
+          </div>
+          <button
+            type="button"
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            id="toggleLoginPassword"
+          >
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <div class="relative">
+            <input
+              id="rememberMe"
+              name="rememberMe"
+              type="checkbox"
+              class="sr-only peer"
+            />
+            <div
+              class="w-10 h-5 bg-gray-200 dark:bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-light dark:peer-checked:bg-primary-dark"
+            ></div>
+          </div>
+          <label
+            for="rememberMe"
+            class="ml-3 block text-sm text-gray-700 dark:text-gray-300 en"
+            >Remember me</label
+          >
+          <label
+            for="rememberMe"
+            class="ml-3 block text-sm text-gray-700 dark:text-gray-300 fa hidden"
+            >مرا به خاطر بسپار</label
+          >
+        </div>
+        <a
+          href="#"
+          class="text-sm text-primary-light dark:text-primary-dark forgot-password en"
+          >Forgot password?</a
+        >
+        <a
+          href="#"
+          class="text-sm text-primary-light dark:text-primary-dark forgot-password fa hidden"
+          >رمز عبور را فراموش کرده‌اید؟</a
+        >
+      </div>
+
+      <div class="pt-2">
+        <button
+          type="submit"
+          class="w-full bg-gradient-to-r from-primary-light to-secondary-light dark:from-primary-dark dark:to-secondary-dark text-white py-3 px-4 rounded-lg font-medium btn-hover transition-all relative overflow-hidden group"
+        >
+          <span class="relative z-10 en">Sign In</span>
+          <span class="relative z-10 fa hidden">ورود</span>
+          <span
+            class="absolute inset-0 bg-gradient-to-r from-secondary-light to-primary-light dark:from-secondary-dark dark:to-primary-dark opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          ></span>
+        </button>
+      </div>
+    </form>
+
+    <!-- Social login options -->
+    <div class="mt-6">
+      <div class="relative">
+        <div class="absolute inset-0 flex items-center">
+          <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="mt-6 text-center text-sm text-gray-500 dark:text-gray-400"
+    >
+      <span class="en"
+        >Don't have an account?
+        <a
+          href="{% url 'signup' %}"
+          class="font-medium text-primary-light dark:text-primary-dark hover:underline"
+          >Sign up</a
+        >
+      </span>
+      <span class="fa hidden"
+        >حساب کاربری ندارید؟
+        <a
+          href="{% url 'signup' %}"
+          class="font-medium text-primary-light dark:text-primary-dark hover:underline"
+          >ثبت نام</a
+        >
+      </span>
+    </div>
+  </div>
+
+  <script>
+    // Theme toggle
+    const themeToggle = document.getElementById("themeToggle");
+    themeToggle.addEventListener("click", function () {
+      document.documentElement.classList.toggle("dark");
+      localStorage.setItem(
+        "darkMode",
+        document.documentElement.classList.contains("dark")
+      );
+    });
+
+    // Check for saved theme preference
+    if (localStorage.getItem("darkMode") === "true") {
+      document.documentElement.classList.add("dark");
+    }
+
+    // Language toggle
+    const languageToggle = document.getElementById("languageToggle");
+    languageToggle.addEventListener("click", function () {
+      const isRTL = document.documentElement.getAttribute("dir") === "rtl";
+      document.documentElement.setAttribute("dir", isRTL ? "ltr" : "rtl");
+      document.documentElement.setAttribute("lang", isRTL ? "en" : "fa");
+
+      // Toggle visibility of language elements
+      document.querySelectorAll(".en").forEach((el) => el.classList.toggle("hidden"));
+      document.querySelectorAll(".fa").forEach((el) => el.classList.toggle("hidden"));
+
+      // Update placeholders
+      const inputs = document.querySelectorAll("input[data-en-placeholder]");
+      inputs.forEach((input) => {
+        const placeholder = isRTL ? input.getAttribute("data-en-placeholder") : input.getAttribute("data-fa-placeholder");
+        input.placeholder = placeholder;
+      });
+    });
+
+    // Password toggle visibility
+    const toggleLoginPassword = document.getElementById("toggleLoginPassword");
+    const loginPassword = document.getElementById("loginPassword");
+    toggleLoginPassword.addEventListener("click", () => {
+      const type = loginPassword.getAttribute("type") === "password" ? "text" : "password";
+      loginPassword.setAttribute("type", type);
+      toggleLoginPassword.innerHTML = type === "password" ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+    });
+
+    // Show SweetAlert for Django messages
+    document.addEventListener("DOMContentLoaded", () => {
+      {% if messages %}
+      {% for message in messages %}
+      Swal.fire({
+        icon: '{% if message.tags == "error" %}error{% elif message.tags == "success" %}success{% else %}info{% endif %}',
+        title: '{{ message|escapejs }}',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+      });
+      {% endfor %}
+      {% endif %}
+    });
+  </script>
+</body>
+</html>
