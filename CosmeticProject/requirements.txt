@@ -1,0 +1,5 @@
+Django>=4.2,<5.0
+djangorestframework>=3.14
+Pillow>=9.0
+psycopg2-binary>=2.9  # اگر از PostgreSQL استفاده می‌کنی
+django-environ>=0.10  # برای مدیریت تنظیمات محیطی (اختیاری)
